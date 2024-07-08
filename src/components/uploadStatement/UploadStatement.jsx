@@ -60,15 +60,33 @@ const UploadStatement = () => {
       4
     )} **** **** ${rawCardNumber.slice(-4)}`;
     const [, year] = statementDate.split("-");
+
+    // Function to check if a transaction is likely an installment based on description keywords
+    const isInstallmentRelated = (description) => {
+      const installmentKeywords = ["INSTALLMENT", "EPP", "INSTALL", "PAYMENT"];
+      return installmentKeywords.some((keyword) =>
+        description.toUpperCase().includes(keyword)
+      );
+    };
+
     const filteredData = data
-      .map(({ E: date, P: description, AG: amount }) => {
-        return {
-          date: date && `${date}/20${year}`,
-          description,
-          amount: amount && Number(amount.replace(",", "")),
-        };
+      .map(({ E: transactionDate, P: description, AH: amountString }) => {
+        if (transactionDate && description && amountString) {
+          const amount = parseFloat(amountString);
+
+          // Check if the transaction is related to installments
+          if (!isInstallmentRelated(description)) {
+            return {
+              date: `${transactionDate.replace("-", "/")}/20${year}`,
+              description,
+              amount,
+            };
+          }
+        }
       })
-      .filter(({ date, description, amount }) => date && description && amount);
+      .filter(
+        ({ date, description, amount } = {}) => date && description && amount
+      );
 
     return [cardNumber, filteredData];
   }
