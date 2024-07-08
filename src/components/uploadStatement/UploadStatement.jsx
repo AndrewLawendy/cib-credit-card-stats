@@ -62,10 +62,17 @@ const UploadStatement = () => {
     const [, year] = statementDate.split("-");
 
     // Function to check if a transaction is likely an installment based on description keywords
+    /**
+     *
+     * @param {string} description
+     * @returns
+     */
     const isInstallmentRelated = (description) => {
       const installmentKeywords = ["INSTALLMENT", "EPP", "INSTALL", "PAYMENT"];
-      return installmentKeywords.some((keyword) =>
-        description.toUpperCase().includes(keyword)
+      return (
+        installmentKeywords.some((keyword) =>
+          description.toUpperCase().includes(keyword)
+        ) || description.endsWith("7E")
       );
     };
 
