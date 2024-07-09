@@ -98,14 +98,16 @@ const ExpensesTable = () => {
                 <Table.Row key={`${description}-${index}`}>
                   <Table.Cell>{date}</Table.Cell>
                   <Table.Cell>{description}</Table.Cell>
-                  <Table.Cell>{amount}</Table.Cell>
+                  <Table.Cell>{amount.toLocaleString()}</Table.Cell>
                 </Table.Row>
               ))}
           </Table.Body>
           <Table.Footer>
             <Table.Row>
               <Table.HeaderCell colSpan="2">Total Amount</Table.HeaderCell>
-              <Table.HeaderCell>{totalAmount.toFixed(2)}</Table.HeaderCell>
+              <Table.HeaderCell>
+                {totalAmount.toLocaleString()}
+              </Table.HeaderCell>
             </Table.Row>
           </Table.Footer>
         </Table>
